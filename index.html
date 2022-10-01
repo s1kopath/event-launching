@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Celebrate</title>
+    <style>
+        * {
+            outline: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background-color: #f44336;
+        }
+
+        body,
+        input {
+            /* cursor: url(http://k003.kiwi6.com/hotlink/vp054ir5gt/c1.png) 32 32, auto; */
+            /* cursor: -webkit-image-set(url(http://k003.kiwi6.com/hotlink/vp054ir5gt/c1.png) 1x, url(http://k003.kiwi6.com/hotlink/z6fy599487/c2.png) 2x) 32 32, auto; */
+            cursor: url(http://k003.kiwi6.com/hotlink/vp054ir5gt/c1.png) 32 32, auto;
+            cursor: -webkit-image-set(url(http://k003.kiwi6.com/hotlink/vp054ir5gt/c1.png) 1x, url(http://k003.kiwi6.com/hotlink/z6fy599487/c2.png) 2x) 32 32, auto;
+        }
+
+        body:active,
+        input:active {
+            cursor: url(http://k003.kiwi6.com/hotlink/3p6w4icbzt/c1a.png) 32 32, auto;
+            cursor: -webkit-image-set(url(http://k003.kiwi6.com/hotlink/3p6w4icbzt/c1a.png) 1x, url(http://k003.kiwi6.com/hotlink/6ma7828al1/c2a.png) 2x) 32 32, auto;
+        }
+
+        #app-cover {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            left: 0;
+            width: 196px;
+            height: 196px;
+            margin: -98px auto 0 auto;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 8px #feeeed;
+            overflow: hidden;
+        }
+
+        #checkbox {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            opacity: 0;
+            z-index: 3;
+        }
+
+        #bin-icon {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            left: 0;
+            width: 42px;
+            height: 58px;
+            margin: -29px auto 0 auto;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        #lid {
+            position: relative;
+            width: 50px;
+            height: 4px;
+            left: -4px;
+            border-radius: 4px;
+        }
+
+        #lid:before {
+            content: "";
+            position: absolute;
+            top: -4px;
+            right: 0;
+            left: 0;
+            width: 10px;
+            height: 6px;
+            margin: 0 auto;
+            border-radius: 10px 10px 0 0;
+        }
+
+        #box {
+            position: relative;
+            height: 52px;
+            margin-top: 2px;
+            border-radius: 0 0 8px 8px;
+        }
+
+        #box-inner {
+            position: relative;
+            top: 4px;
+            width: 34px;
+            height: 44px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 0 0 5px 5px;
+        }
+
+        #bin-lines {
+            position: relative;
+            top: 7px;
+            margin: 0 auto;
+        }
+
+        #bin-lines,
+        #bin-lines:before,
+        #bin-lines:after {
+            width: 3px;
+            height: 30px;
+            border-radius: 4px;
+        }
+
+        #bin-lines:before,
+        #bin-lines:after {
+            content: "";
+            position: absolute;
+        }
+
+        #bin-lines:before {
+            left: -10px;
+        }
+
+        #bin-lines:after {
+            left: 10px;
+        }
+
+        #layer {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            width: 0;
+            height: 0;
+            background-color: #03a9f4;
+            border-radius: 50%;
+            transition: 0.25s ease all;
+            z-index: 1;
+        }
+
+        #lid,
+        #lid:before,
+        #box,
+        #bin-lines,
+        #bin-lines:before,
+        #bin-lines:after {
+            background-color: #f44336;
+            transition: 0.2s ease background-color;
+        }
+
+        #checkbox:checked~#bin-icon #lid,
+        #checkbox:checked~#bin-icon #lid:before,
+        #checkbox:checked~#bin-icon #box,
+        #checkbox:checked~#bin-icon #box-inner {
+            background-color: #fff;
+        }
+
+        #checkbox:checked~#bin-icon #bin-lines,
+        #checkbox:checked~#bin-icon #bin-lines:before,
+        #checkbox:checked~#bin-icon #bin-lines:after {
+            background-color: #03a9f4;
+        }
+
+        #checkbox:checked+#bin-icon #box {
+            animation: shake 0.2s ease 0.1s;
+        }
+
+        #checkbox:checked+#bin-icon #lid {
+            animation: lift-up 0.8s ease 0.1s, shake_u 0.8s ease 0.1s,
+                shake_l 0.2s ease 0.8s;
+        }
+
+        #checkbox:checked~#layer {
+            width: 226px;
+            height: 226px;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: rotateZ(3deg);
+            }
+
+            25% {
+                transform: rotateZ(0);
+            }
+
+            75% {
+                transform: rotateZ(-3deg);
+            }
+
+            100% {
+                transform: rotateZ(0);
+            }
+        }
+
+        @keyframes lift-up {
+            0% {
+                top: 0;
+            }
+
+            50% {
+                top: -35px;
+            }
+
+            100% {
+                top: 0;
+            }
+        }
+
+        @keyframes shake_u {
+            0% {
+                transform: rotateZ(0);
+            }
+
+            25% {
+                transform: rotateZ(-15deg);
+            }
+
+            50% {
+                transform: rotateZ(0deg);
+            }
+
+            75% {
+                transform: rotateZ(15deg);
+            }
+
+            100% {
+                transform: rotateZ(0);
+            }
+        }
+
+        @keyframes shake_l {
+            0% {
+                transform: rotateZ(0);
+            }
+
+            80% {
+                transform: rotateZ(3deg);
+            }
+
+            90% {
+                transform: rotateZ(-3deg);
+            }
+
+            100% {
+                transform: rotateZ(0);
+            }
+        }
+    </style>
+
+    <style>
+        body {
+            font-size: 16px;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f8faff;
+        }
+
+        .bubbly-button {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            display: inline-block;
+            font-size: 1em;
+            padding: 1em 2em;
+            margin-top: 100px;
+            margin-bottom: 60px;
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: #ff0081;
+            color: #fff;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
+            box-shadow: 0 2px 25px rgba(255, 0, 130, 0.5);
+        }
+
+        .bubbly-button:focus {
+            outline: 0;
+        }
+
+        .bubbly-button:before,
+        .bubbly-button:after {
+            position: absolute;
+            content: '';
+            display: block;
+            width: 140%;
+            height: 100%;
+            left: -20%;
+            z-index: -1000;
+            transition: all ease-in-out 0.5s;
+            background-repeat: no-repeat;
+        }
+
+        .bubbly-button:before {
+            display: none;
+            top: -75%;
+            background-image: radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 20%, #ff0081 20%, transparent 30%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+            background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+        }
+
+        .bubbly-button:after {
+            display: none;
+            bottom: -75%;
+            background-image: radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+            background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+        }
+
+        .bubbly-button:active {
+            transform: scale(0.9);
+            background-color: #e60074;
+            box-shadow: 0 2px 25px rgba(255, 0, 130, 0.2);
+        }
+
+        .bubbly-button.animate:before {
+            display: block;
+            animation: topBubbles ease-in-out 0.75s forwards;
+        }
+
+        .bubbly-button.animate:after {
+            display: block;
+            animation: bottomBubbles ease-in-out 0.75s forwards;
+        }
+
+        @keyframes topBubbles {
+            0% {
+                background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+            }
+
+            50% {
+                background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+            }
+
+            100% {
+                background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+                background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+            }
+        }
+
+        @keyframes bottomBubbles {
+            0% {
+                background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
+            }
+
+            50% {
+                background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+            }
+
+            100% {
+                background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+                background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+            }
+        }
+    </style>
+
+    <style>
+        /* ---- reset ---- */
+
+        body {
+            margin: 0;
+            font: normal 75% Arial, Helvetica, sans-serif;
+        }
+
+        canvas {
+            display: block;
+            vertical-align: bottom;
+        }
+
+        /* ---- particles.js container ---- */
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /* background-color: #00000094; */
+            background-image: url("");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 50% 50%;
+        }
+
+        /* ---- stats.js ---- */
+
+        .count-particles {
+            background: #000022;
+            position: absolute;
+            top: 48px;
+            left: 0;
+            width: 80px;
+            color: #13E8E9;
+            font-size: .8em;
+            text-align: left;
+            text-indent: 4px;
+            line-height: 14px;
+            padding-bottom: 2px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .js-count-particles {
+            font-size: 1.1em;
+        }
+
+        #stats,
+        .count-particles {
+            -webkit-user-select: none;
+        }
+
+        #stats {
+            border-radius: 3px 3px 0 0;
+            overflow: hidden;
+        }
+
+        .count-particles {
+            border-radius: 0 0 3px 3px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- particles.js container -->
+    <div id="particles-js"></div>
+
+    <!-- stats - count particles -->
+
+    <div style="padding-top: 200px">
+        <a href="./video-playback.html" class="bubbly-button" style="text-decoration: none!important;">Lunch!</a>
+    </div>
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://threejs.org/examples/js/libs/stats.min.js"></script>
+
+    <script>
+        var animateButton = function (e) {
+
+            e.preventDefault;
+            //reset animation
+            e.target.classList.remove('animate');
+
+            e.target.classList.add('animate');
+            setTimeout(function () {
+                e.target.classList.remove('animate');
+            }, 700);
+        };
+
+        var bubblyButtons = document.getElementsByClassName("bubbly-button");
+
+        for (var i = 0; i < bubblyButtons.length; i++) {
+            bubblyButtons[i].addEventListener('click', animateButton, false);
+        }
+    </script>
+
+    <script>
+        /* ---- particles.js config ---- */
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#020202"
+                },
+                "shape": {
+                    "type": "polygon",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#fc0707"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#020202",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": false
+        });
+
+
+        /* ---- stats.js config ---- */
+
+        var count_particles, stats, update;
+        stats = new Stats;
+        stats.setMode(0);
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.display = 'none';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        document.body.appendChild(stats.domElement);
+        count_particles = document.querySelector('.js-count-particles');
+        update = function () {
+            stats.begin();
+            stats.end();
+            if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+                count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+            }
+            requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+    </script>
+</body>
+
+</html>
